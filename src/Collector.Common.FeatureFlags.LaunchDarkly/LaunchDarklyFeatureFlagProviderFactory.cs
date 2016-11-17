@@ -7,6 +7,8 @@
 
     using global::LaunchDarkly.Client;
 
+    using Microsoft.Extensions.Logging;
+
     using Configuration = global::LaunchDarkly.Client.Configuration;
 
     public class LaunchDarklyFeatureFlagProviderFactory
@@ -17,18 +19,18 @@
         private const int MAX_REPORT_USAGE_INTERVAL = 9;
         private static LaunchDarklyFeatureFlagProvider launchDarklyFeatureFlagProvider;
 
-        public LaunchDarklyFeatureFlagProvider Create(string localKeyPath = null)
+        public LaunchDarklyFeatureFlagProvider Create(string localKeyPath = null, ILoggerFactory loggerFactory = null)
         {
             switch (GetValueFromAppSettingsKey("LaunchDarkly:Strategy")?.ToUpper())
             {
                 case "STATIC":
-                    return launchDarklyFeatureFlagProvider ?? (launchDarklyFeatureFlagProvider = CreateNew(localKeyPath));
+                    return launchDarklyFeatureFlagProvider ?? (launchDarklyFeatureFlagProvider = CreateNew(localKeyPath, loggerFactory));
                 default:
-                    return CreateNew(localKeyPath);
+                    return CreateNew(localKeyPath, loggerFactory);
             }
         }
 
-        private LaunchDarklyFeatureFlagProvider CreateNew(string localKeyPath)
+        private LaunchDarklyFeatureFlagProvider CreateNew(string localKeyPath, ILoggerFactory loggerFactory)
         {
             var sdkKey = GetAndEnsureValueFromAppSettingsKey("LaunchDarkly:SdkKey");
 
@@ -48,11 +50,12 @@
 
             var pollingInterval = GetPollingInterval();
 
-            var configuration = Configuration.Default()
-                                             .WithSdkKey(sdkKey)
+            var configuration = Configuration.Default(sdkKey)
                                              .WithPollingInterval(TimeSpan.FromSeconds(pollingInterval))
                                              .WithEventQueueFrequency(TimeSpan.FromSeconds(GetReportUsageFrequency()))
                                              .WithEventQueueCapacity(GetReportUsageBuffer());
+            if (loggerFactory != null)
+                configuration = configuration.WithLoggerFactory(loggerFactory);
 
             return new LaunchDarklyFeatureFlagProvider(configuration);
         }
