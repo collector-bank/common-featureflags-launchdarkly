@@ -6,7 +6,6 @@ using Configuration = LaunchDarkly.Client.Configuration;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Configuration;
 using System.Collections.Generic;
-using System.ComponentModel;
 
 namespace Collector.Common.FeatureFlags.LaunchDarkly
 {
@@ -23,7 +22,8 @@ namespace Collector.Common.FeatureFlags.LaunchDarkly
         private const int MIN_REPORT_USAGE_INTERVAL = 1;
         private const int MAX_REPORT_USAGE_INTERVAL = 9;
 
-        Configuration _configuration;
+        private readonly Configuration _configuration;
+        private LaunchDarklyFeatureFlagProvider _singleton;
 
         private LaunchDarklyFeatureFlagProviderBuilder(string sdkKey)
         {
@@ -54,14 +54,14 @@ namespace Collector.Common.FeatureFlags.LaunchDarkly
         {
             LaunchDarklyFeatureFlagProviderBuilder builder;
 
-            var localKeyPath = GetValueFromAppSettingsKey<string>("LaunchDarkly:LocalKeyPath");
-            if (!string.IsNullOrWhiteSpace(localKeyPath))
+            var sdkKey = GetValueFromAppSettingsKey<string>("LaunchDarkly:SdkKey");
+            if (sdkKey == "LOCAL")
             {
+                var localKeyPath = GetValueFromAppSettingsKey<string>("LaunchDarkly:LocalKeyPath");
                 builder = CreateWithLocalFile(localKeyPath);
             }
             else
             {
-                var sdkKey = GetValueFromAppSettingsKey<string>("LaunchDarkly:SdkKey");
                 builder = CreateWithKey(sdkKey);
             }
 
@@ -85,18 +85,19 @@ namespace Collector.Common.FeatureFlags.LaunchDarkly
 
             return builder;
         }
+
         public static LaunchDarklyFeatureFlagProviderBuilder CreateFromConfigSection(IConfigurationSection configurationSection)
         {
             LaunchDarklyFeatureFlagProviderBuilder builder;
 
-            var localKeyPath = configurationSection.GetValue<string>("LocalKeyPath");
-            if (!string.IsNullOrWhiteSpace(localKeyPath))
+            var sdkKey = configurationSection.GetValue<string>("SdkKey");
+            if (sdkKey == "LOCAL")
             {
+                var localKeyPath = configurationSection.GetValue<string>("LocalKeyPath");
                 builder = CreateWithLocalFile(localKeyPath);
             }
             else
             {
-                var sdkKey = configurationSection.GetValue<string>("SdkKey");
                 builder = CreateWithKey(sdkKey);
             }
 
@@ -123,7 +124,7 @@ namespace Collector.Common.FeatureFlags.LaunchDarkly
 
         public IFeatureFlagProvider Build()
         {
-            return new LaunchDarklyFeatureFlagProvider(_configuration);
+            return _singleton ?? (_singleton = new LaunchDarklyFeatureFlagProvider(_configuration));
         }
 
         public LaunchDarklyFeatureFlagProviderBuilder WithPollingInterval(int seconds)
