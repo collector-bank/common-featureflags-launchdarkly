@@ -31,8 +31,8 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="Collector.Common.FeatureFlags, Version=1.0.2.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\Collector.Common.FeatureFlags.1.0.2.0\lib\net45\Collector.Common.FeatureFlags.dll</HintPath>
+    <Reference Include="Collector.Common.FeatureFlags, Version=1.1.1.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\Collector.Common.FeatureFlags.1.1.1\lib\net45\Collector.Common.FeatureFlags.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="LaunchDarkly.Client, Version=3.1.1.0, Culture=neutral, processorArchitecture=MSIL">
