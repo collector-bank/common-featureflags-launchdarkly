@@ -19,18 +19,18 @@
         private const int MAX_REPORT_USAGE_INTERVAL = 9;
         private static LaunchDarklyFeatureFlagProvider launchDarklyFeatureFlagProvider;
 
-        public LaunchDarklyFeatureFlagProvider Create(string localKeyPath = null, ILoggerFactory loggerFactory = null)
+        public LaunchDarklyFeatureFlagProvider Create(string localKeyPath = null, ILoggerFactory loggerFactory = null, bool cacheFlagValuesForDefaultUser = false)
         {
             switch (GetValueFromAppSettingsKey("LaunchDarkly:Strategy")?.ToUpper())
             {
                 case "STATIC":
-                    return launchDarklyFeatureFlagProvider ?? (launchDarklyFeatureFlagProvider = CreateNew(localKeyPath, loggerFactory));
+                    return launchDarklyFeatureFlagProvider ?? (launchDarklyFeatureFlagProvider = CreateNew(localKeyPath, loggerFactory, cacheFlagValuesForDefaultUser));
                 default:
-                    return CreateNew(localKeyPath, loggerFactory);
+                    return CreateNew(localKeyPath, loggerFactory, cacheFlagValuesForDefaultUser);
             }
         }
 
-        private LaunchDarklyFeatureFlagProvider CreateNew(string localKeyPath, ILoggerFactory loggerFactory)
+        private LaunchDarklyFeatureFlagProvider CreateNew(string localKeyPath, ILoggerFactory loggerFactory, bool cacheFlagValuesForDefaultUser)
         {
             var sdkKey = GetAndEnsureValueFromAppSettingsKey("LaunchDarkly:SdkKey");
 
@@ -57,7 +57,7 @@
             if (loggerFactory != null)
                 configuration = configuration.WithLoggerFactory(loggerFactory);
 
-            return new LaunchDarklyFeatureFlagProvider(configuration);
+            return new LaunchDarklyFeatureFlagProvider(configuration, cacheFlagValuesForDefaultUser);
         }
 
         private int GetPollingInterval()

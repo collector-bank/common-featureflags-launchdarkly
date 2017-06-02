@@ -24,6 +24,7 @@ namespace Collector.Common.FeatureFlags.LaunchDarkly
 
         private readonly Configuration _configuration;
         private LaunchDarklyFeatureFlagProvider _singleton;
+        private bool _cacheFlagValuesForDefaultUser;
 
         private LaunchDarklyFeatureFlagProviderBuilder(string sdkKey)
         {
@@ -124,12 +125,18 @@ namespace Collector.Common.FeatureFlags.LaunchDarkly
 
         public IFeatureFlagProvider Build()
         {
-            return _singleton ?? (_singleton = new LaunchDarklyFeatureFlagProvider(_configuration));
+            return _singleton ?? (_singleton = new LaunchDarklyFeatureFlagProvider(_configuration, _cacheFlagValuesForDefaultUser));
         }
 
         public LaunchDarklyFeatureFlagProviderBuilder WithPollingInterval(int seconds)
         {
             _configuration.WithPollingInterval(TimeSpan.FromSeconds(EnsureHealthyPollingInterval(seconds)));
+            return this;
+        }
+
+        public LaunchDarklyFeatureFlagProviderBuilder WithCachingOfFlagValuesForDefaultUser()
+        {
+            _cacheFlagValuesForDefaultUser = true;
             return this;
         }
 

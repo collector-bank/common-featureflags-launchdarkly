@@ -97,6 +97,8 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="DictionaryCache\DictionaryCache.cs" />
+    <Compile Include="DictionaryCache\IDictionaryCache.cs" />
     <Compile Include="LaunchDarklyFeatureFlagProvider.cs" />
     <Compile Include="LaunchDarklyFeatureFlagProviderBuilder.cs" />
     <Compile Include="LaunchDarklyFeatureFlagProviderFactory.cs" />
