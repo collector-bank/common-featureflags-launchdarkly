@@ -1,5 +1,7 @@
 ﻿using System;
+#if NET452
 using System.Configuration;
+#endif
 using System.IO;
 using LaunchDarkly.Client;
 using Configuration = LaunchDarkly.Client.Configuration;
@@ -43,14 +45,14 @@ namespace Collector.Common.FeatureFlags.LaunchDarkly
         {
             if (!File.Exists(localKeyPath))
             {
-                throw new ConfigurationErrorsException($"To run locally you need to have a file '{localKeyPath}' that contains your LaunchDarkly SDK key.");
+                throw new ArgumentException($"To run locally you need to have a file '{localKeyPath}' that contains your LaunchDarkly SDK key.");
             }
 
             var sdkKey = File.ReadAllText(localKeyPath).Trim();
 
             return new LaunchDarklyFeatureFlagProviderBuilder(sdkKey);
         }
-
+#if NET452
         public static LaunchDarklyFeatureFlagProviderBuilder CreateFromAppSettings()
         {
             LaunchDarklyFeatureFlagProviderBuilder builder;
@@ -86,7 +88,7 @@ namespace Collector.Common.FeatureFlags.LaunchDarkly
 
             return builder;
         }
-
+#endif
         public static LaunchDarklyFeatureFlagProviderBuilder CreateFromConfigSection(IConfigurationSection configurationSection)
         {
             LaunchDarklyFeatureFlagProviderBuilder builder;
@@ -175,6 +177,7 @@ namespace Collector.Common.FeatureFlags.LaunchDarkly
             return this;
         }
 
+#if NET452
         private static T GetValueFromAppSettingsKey<T>(string key)
         {
             if (string.IsNullOrWhiteSpace(key))
@@ -206,6 +209,6 @@ namespace Collector.Common.FeatureFlags.LaunchDarkly
 
             throw new KeyNotFoundException($"The key '{key}' is not found in the config file.");
         }
-
+#endif
     }
 }

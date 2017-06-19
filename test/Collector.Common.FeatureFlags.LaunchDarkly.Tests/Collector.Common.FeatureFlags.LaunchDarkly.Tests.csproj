@@ -33,9 +33,8 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="Collector.Common.FeatureFlags, Version=1.1.1.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\Collector.Common.FeatureFlags.1.1.1\lib\net45\Collector.Common.FeatureFlags.dll</HintPath>
-      <Private>True</Private>
+    <Reference Include="Collector.Common.FeatureFlags, Version=2.0.1.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\Collector.Common.FeatureFlags.2.0.1\lib\netstandard1.2\Collector.Common.FeatureFlags.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.Extensions.Configuration, Version=1.1.1.0, Culture=neutral, PublicKeyToken=adb9793829ddae60, processorArchitecture=MSIL">
       <HintPath>..\..\packages\Microsoft.Extensions.Configuration.1.1.1\lib\netstandard1.1\Microsoft.Extensions.Configuration.dll</HintPath>
@@ -111,16 +110,18 @@
     <Content Include="appsettings.json">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <None Include="packages.config" />
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\..\src\Collector.Common.FeatureFlags.LaunchDarkly\Collector.Common.FeatureFlags.LaunchDarkly.csproj">
-      <Project>{77f54370-c4d7-425e-b467-7fda66f0e726}</Project>
-      <Name>Collector.Common.FeatureFlags.LaunchDarkly</Name>
-    </ProjectReference>
+    <None Include="packages.config">
+      <SubType>Designer</SubType>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <Service Include="{82A7F48D-3B50-4B1E-B82E-3ADA8210C358}" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\src\Collector.Common.FeatureFlags.LaunchDarkly\Collector.Common.FeatureFlags.LaunchDarkly.csproj">
+      <Project>{5a6ead47-c368-48f4-b360-3f3d493f790e}</Project>
+      <Name>Collector.Common.FeatureFlags.LaunchDarkly</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
