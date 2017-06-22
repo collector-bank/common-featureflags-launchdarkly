@@ -14,7 +14,7 @@
 
   <ItemGroup>
     <PackageReference Include="LaunchDarkly.Client" Version="3.3.0" />
-    <PackageReference Include="Collector.Common.FeatureFlags" Version="2.0.1" />
+    <PackageReference Include="Collector.Common.FeatureFlags" Version="2.0.2" />
     <PackageReference Include="Microsoft.Extensions.Configuration" Version="1.1.1" />
     <PackageReference Include="Microsoft.Extensions.Configuration.Binder" Version="1.1.1" />
   </ItemGroup>
