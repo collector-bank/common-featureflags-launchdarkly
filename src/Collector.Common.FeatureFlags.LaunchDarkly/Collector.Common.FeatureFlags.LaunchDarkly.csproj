@@ -3,7 +3,7 @@
   <PropertyGroup>
     <TargetFrameworks>netstandard1.6;net452</TargetFrameworks>
     <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
-    <Version>3.0.0</Version>
+    <Version>3.0.1</Version>
     <Authors>Heimdal</Authors>
     <Company>Collector Bank AB</Company>
     <Description>An implementation of Collector.Common.FeatureFlags using LaunchDarkly.</Description>
