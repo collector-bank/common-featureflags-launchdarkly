@@ -3,13 +3,15 @@
   <PropertyGroup>
     <TargetFrameworks>netstandard1.6;net452</TargetFrameworks>
     <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
-    <Version>3.0.1</Version>
-    <Authors>Heimdal</Authors>
+    <Version>3.0.2</Version>
+    <Authors>Team Heimdal</Authors>
     <Company>Collector Bank AB</Company>
     <Description>An implementation of Collector.Common.FeatureFlags using LaunchDarkly.</Description>
     <RepositoryUrl>https://github.com/collector-bank/common-featureflags-launchdarkly</RepositoryUrl>
     <PackageProjectUrl>https://github.com/collector-bank/common-featureflags-launchdarkly</PackageProjectUrl>
     <RepositoryType>git</RepositoryType>
+    <PackageIconUrl>https://raw.githubusercontent.com/collector-bank/common-featureflags-launchdarkly/master/icon.png</PackageIconUrl>
+    <PackageTags>collectorbank collector feature-flagging feature-toggle launchdarkly</PackageTags>
   </PropertyGroup>
 
   <ItemGroup>
