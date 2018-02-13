@@ -25,7 +25,6 @@ namespace Collector.Common.FeatureFlags.LaunchDarkly
         private const int MAX_REPORT_USAGE_INTERVAL = 9;
 
         private readonly Configuration _configuration;
-        private LaunchDarklyFeatureFlagProvider _singleton;
         private bool _cacheFlagValuesForDefaultUser;
 
         private LaunchDarklyFeatureFlagProviderBuilder(string sdkKey)
@@ -127,7 +126,10 @@ namespace Collector.Common.FeatureFlags.LaunchDarkly
 
         public IFeatureFlagProvider Build()
         {
-            return _singleton ?? (_singleton = new LaunchDarklyFeatureFlagProvider(_configuration, _cacheFlagValuesForDefaultUser));
+            if (FeatureFlagProvider.Instance == null || !(FeatureFlagProvider.Instance is LaunchDarklyFeatureFlagProvider))
+                FeatureFlagProvider.Instance = new LaunchDarklyFeatureFlagProvider(_configuration, _cacheFlagValuesForDefaultUser);
+
+            return FeatureFlagProvider.Instance;
         }
 
         public LaunchDarklyFeatureFlagProviderBuilder WithPollingInterval(int seconds)
