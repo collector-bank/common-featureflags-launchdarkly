@@ -26,6 +26,7 @@ namespace Collector.Common.FeatureFlags.LaunchDarkly
 
         private readonly Configuration _configuration;
         private bool _cacheFlagValuesForDefaultUser;
+        private static readonly object LockObject = new object();
 
         private LaunchDarklyFeatureFlagProviderBuilder(string sdkKey)
         {
@@ -126,10 +127,13 @@ namespace Collector.Common.FeatureFlags.LaunchDarkly
 
         public IFeatureFlagProvider Build()
         {
-            if (FeatureFlagProvider.Instance == null || !(FeatureFlagProvider.Instance is LaunchDarklyFeatureFlagProvider))
-                FeatureFlagProvider.Instance = new LaunchDarklyFeatureFlagProvider(_configuration, _cacheFlagValuesForDefaultUser);
+            lock (LockObject)
+            {
+                if (FeatureFlagProvider.Instance == null || !(FeatureFlagProvider.Instance is LaunchDarklyFeatureFlagProvider))
+                    FeatureFlagProvider.Instance = new LaunchDarklyFeatureFlagProvider(_configuration, _cacheFlagValuesForDefaultUser);
 
-            return FeatureFlagProvider.Instance;
+                return FeatureFlagProvider.Instance;
+            }
         }
 
         public LaunchDarklyFeatureFlagProviderBuilder WithPollingInterval(int seconds)
