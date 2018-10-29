@@ -1,12 +1,30 @@
-﻿using Microsoft.Extensions.Configuration;
-using Xunit;
+﻿#if NET452
+using System.Configuration;
+using System.Collections.Generic;
+#elif NETCOREAPP2_0
+using Microsoft.Extensions.Configuration;
+#endif
+
+using NUnit.Framework;
 
 namespace Collector.Common.FeatureFlags.LaunchDarkly.Tests
 {
+    [TestFixture]
     public class LaunchDarklyFeatureFlagProviderBuilderTests
     {
-        [Fact]
-        public void CreateFromAppSettings_WithValidSection_ShouldReturnProvider()
+
+#if NET452
+        [Test]
+        public void CreateFromAppSettings_WithAppConfig_ShouldReturnProvider()
+        {
+            var provider = LaunchDarklyFeatureFlagProviderBuilder.CreateFromAppSettings().Build();
+
+            Assert.NotNull(provider);
+        }
+
+#elif NETCOREAPP2_0
+        [Test]
+        public void CreateFromConfigSection_WithValidSection_ShouldReturnProvider()
         {
             var configuration = new ConfigurationBuilder()
                  .AddJsonFile("appsettings.json")
@@ -18,5 +36,6 @@ namespace Collector.Common.FeatureFlags.LaunchDarkly.Tests
 
             Assert.NotNull(provider);
         }
+#endif
     }
 }

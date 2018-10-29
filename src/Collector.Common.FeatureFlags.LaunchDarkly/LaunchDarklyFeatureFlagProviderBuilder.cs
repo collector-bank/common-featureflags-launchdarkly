@@ -1,13 +1,15 @@
 ﻿using System;
+
 #if NET452
 using System.Configuration;
+using System.Collections.Generic;
+#elif NETSTANDARD
+using Microsoft.Extensions.Configuration;
 #endif
+
 using System.IO;
 using LaunchDarkly.Client;
 using Configuration = LaunchDarkly.Client.Configuration;
-using Microsoft.Extensions.Logging;
-using Microsoft.Extensions.Configuration;
-using System.Collections.Generic;
 
 namespace Collector.Common.FeatureFlags.LaunchDarkly
 {
@@ -52,6 +54,7 @@ namespace Collector.Common.FeatureFlags.LaunchDarkly
 
             return new LaunchDarklyFeatureFlagProviderBuilder(sdkKey);
         }
+
 #if NET452
         public static LaunchDarklyFeatureFlagProviderBuilder CreateFromAppSettings()
         {
@@ -89,6 +92,8 @@ namespace Collector.Common.FeatureFlags.LaunchDarkly
             return builder;
         }
 #endif
+
+#if NETSTANDARD
         public static LaunchDarklyFeatureFlagProviderBuilder CreateFromConfigSection(IConfigurationSection configurationSection)
         {
             LaunchDarklyFeatureFlagProviderBuilder builder;
@@ -124,6 +129,7 @@ namespace Collector.Common.FeatureFlags.LaunchDarkly
 
             return builder;
         }
+#endif
 
         public IFeatureFlagProvider Build()
         {
@@ -175,12 +181,6 @@ namespace Collector.Common.FeatureFlags.LaunchDarkly
         private static int EnsureHealthyReportUsageBuffer(int buffer)
         {
             return Math.Max(buffer, MIN_REPORT_USAGE_BUFFER);
-        }
-
-        public LaunchDarklyFeatureFlagProviderBuilder WithLoggerFactory(ILoggerFactory loggerFactory)
-        {
-            _configuration.WithLoggerFactory(loggerFactory);
-            return this;
         }
 
 #if NET452

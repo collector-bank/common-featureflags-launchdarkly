@@ -3,7 +3,7 @@
 //   Copyright © Collector AB. All rights reserved.
 // </copyright>
 // --------------------------------------------------------------------------------------------------------------------
-namespace Example
+namespace Example.NetCore
 {
     using Collector.Common.FeatureFlags;
 
